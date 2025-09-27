@@ -31,8 +31,8 @@ public class SecurityConfig {
             
             // Public endpoints
             .requestMatchers("/", "/actuator/health", "/v3/api-docs/**", "/swagger-ui/**",
-                            "/api/auth/register", "/api/auth/login", "/api/auth/users").permitAll()
-            
+                            "/api/auth/register", "/api/auth/login", "/api/auth/users","/images/**").permitAll()
+
             // Protected endpoints (POST/PUT/DELETE)
   .requestMatchers(HttpMethod.POST, "/products", "/products/**").hasRole("ADMIN")
   .requestMatchers(HttpMethod.PUT, "/products", "/products/**").hasRole("ADMIN")
