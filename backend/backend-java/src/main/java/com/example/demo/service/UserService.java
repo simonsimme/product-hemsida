@@ -1,5 +1,7 @@
 package com.example.demo.service;
 
+import java.util.Set;
+
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +21,7 @@ public class UserService {
         User user = new User();
         user.setEmail(email);
         user.setPasswordHash(passwordEncoder.encode(password));
+        user.setRole("USER"); // Default user
         return userRepository.save(user);
     }
 

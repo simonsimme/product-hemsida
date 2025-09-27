@@ -1,14 +1,10 @@
 package com.example.demo.entities;
 
-import java.util.HashSet;
-import java.util.Set;
 import java.util.UUID;
 import java.time.OffsetDateTime;
 
 import jakarta.persistence.Column;
-import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
@@ -16,22 +12,27 @@ import jakarta.persistence.Table;
 import lombok.*;
 
 @Entity
-@Table(name = "users")
+@Table(name = "products")
 
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
-
-public class User {
+public class Products {
     @Id
     private UUID id = UUID.randomUUID();
 
-    @Column(unique = true, nullable = false)
-    private String email;
+    @Column(name = "title", nullable = false)
+    private String title;
 
-    @Column(name = "password_hash",nullable = false)
-    private String passwordHash;
+    @Column(name = "description",nullable = false)
+    private String description;
 
-    @Column(name = "role", nullable = false)
-    private String role;
+    @Column(name = "price",nullable = false)
+    private Double price;
+
+    @Column(name = "quantity",nullable = false)
+    private Integer quantity;
+
+    @Column(name = "image_url")
+    private String imageUrl;
 
     @Column(name = "created_at")
     private OffsetDateTime createdAt;

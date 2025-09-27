@@ -3,6 +3,7 @@ CREATE TABLE IF NOT EXISTS users (
     id UUID PRIMARY KEY,
     email TEXT UNIQUE NOT NULL,
     password_hash TEXT NOT NULL,
+    role TEXT NOT NULL CHECK (role IN ('USER', 'ADMIN')),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -30,5 +31,5 @@ CREATE TABLE IF NOT EXISTS order_items (
     order_id UUID REFERENCES orders(id) ON DELETE CASCADE, --tabort om order tas bort
     product_id UUID REFERENCES products(id),
     quantity INT NOT NULL,
-    price NUMERIC(10, 2) NOT NULL -- pris vid köp tillfället
+    price NUMERIC(10, 2) NOT NULL 
 );
