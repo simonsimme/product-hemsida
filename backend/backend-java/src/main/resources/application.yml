@@ -9,9 +9,6 @@ spring:
     username: ${DB_USER:postgres}
     password: ${DB_PASS:password}
     driver-class-name: org.postgresql.Driver
-  jpa:
-    open-in-view: false
-    show-sql: ${SHOW_SQL:false}
   flyway:
     enabled: true
     locations: classpath:db/migration

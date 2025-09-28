@@ -1,9 +1,5 @@
 package com.example.demo.service;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.util.List;
 import java.util.UUID;
 
@@ -19,7 +15,6 @@ import com.example.demo.repos.OrderRepository;
 import com.example.demo.repos.ProductRepository;
 import com.example.demo.repos.UserRepository;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -29,7 +24,6 @@ public class OrderService {
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
 
-    @Transactional
     public Order createOrder(OrderRequest orderRequest) {
         if (orderRequest.items() == null || orderRequest.items().isEmpty()) {
             throw new IllegalArgumentException("Order must contain at least one item");
@@ -59,7 +53,6 @@ public class OrderService {
         return orderRepository.save(order);
     }
 
-    @Transactional
     public Order createOrUpdateOrder(OrderRequest orderRequest) {
         if (orderRequest.items() == null || orderRequest.items().isEmpty()) {
             throw new IllegalArgumentException("Order must contain at least one item");
@@ -100,30 +93,7 @@ public class OrderService {
     }
 
     public List<Order> getOrdersForUser(UUID userId) {
-        List<Order> orders = orderRepository.findByUserId(userId);
-
-        try (Connection connection = DriverManager.getConnection(
-                "jdbc:postgresql://localhost:8081/product_db", "postgres", "password")) {
-
-            for (Order order : orders) {
-                String sql = "SELECT * FROM users WHERE id = ?";
-                try (PreparedStatement statement = connection.prepareStatement(sql)) {
-                    statement.setObject(1, order.getUser().getId()); // set skyddar mot sql injectioner
-                    try (ResultSet resultSet = statement.executeQuery()) {
-                        if (resultSet.next()) {
-                            User user = new User();
-                            user.setId((UUID) resultSet.getObject("id"));
-                            user.setEmail(resultSet.getString("email"));
-                            order.setUser(user);
-                        }
-                    }
-                }
-            }
-        } catch (Exception e) {
-            throw new RuntimeException("Error fetching user data", e);
-        }
-
-        return orders;
+        return orderRepository.findByUserId(userId);
     }
 
     public Order getActiveOrder(UUID userId) {
@@ -133,7 +103,6 @@ public class OrderService {
             .orElseThrow(() -> new RuntimeException("No active order found for user"));
     }
 
-    @Transactional
     public Order updateOrder(Order order) {
         return orderRepository.save(order);
     }

@@ -8,11 +8,11 @@ on:
     branches:
       - main
  
-jobs:
+jobs: 
   test:
     runs-on: ubuntu-latest
     
-    services:
+    services: # startar databas service
       postgres:
         image: postgres:16
         env:
@@ -52,7 +52,7 @@ jobs:
         done
         echo "PostgreSQL is ready!"
 
-    - name: Compile backend
+    - name: Compile backend                                             #backend tester
       run: mvn -f backend/backend-java/pom.xml compile
 
     - name: Run backend tests
@@ -73,7 +73,7 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-node-
 
-    - name: Install frontend dependencies
+    - name: Install frontend dependencies ##frontend tester
       working-directory: frontend
       run: |
         rm -rf node_modules package-lock.json

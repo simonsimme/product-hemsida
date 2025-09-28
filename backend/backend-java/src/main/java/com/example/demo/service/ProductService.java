@@ -7,9 +7,6 @@ import com.example.demo.auth.dto.ProductRequest;
 import com.example.demo.entities.Products;
 import com.example.demo.repos.ProductRepository;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -23,9 +20,6 @@ public class ProductService {
     public List<Products> getAllProducts() {
         return productRepository.findAll();
     }
-    public Page<Products> getProducts(Pageable pageable) {
-    return productRepository.findAll(pageable);
-}
 
     public Optional<Products> getProductById(UUID id) {
         return productRepository.findById(id);
