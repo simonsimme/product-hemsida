@@ -12,6 +12,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
 
 @Configuration
 @EnableMethodSecurity
@@ -22,6 +23,14 @@ public class SecurityConfig {
   @Bean
   SecurityFilterChain filterChain(HttpSecurity http, JwtService jwtService) throws Exception {
     http.csrf(csrf -> csrf.disable())
+         .cors(cors -> cors.configurationSource(request -> {
+           CorsConfiguration config = new CorsConfiguration();
+           config.addAllowedOrigin("http://localhost:3000"); // Frontend origin
+           config.addAllowedMethod("*"); // Allow all HTTP methods
+           config.addAllowedHeader("*"); // Allow all headers
+           config.setAllowCredentials(true); // Allow credentials
+           return config;
+       }))
        .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
        .authorizeHttpRequests(auth -> auth
 

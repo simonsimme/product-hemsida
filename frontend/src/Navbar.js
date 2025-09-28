@@ -1,7 +1,7 @@
-
 import { useTheme } from './ThemeContext';
+import { Link } from 'react-router-dom';
 
-export default function Navbar({ onNavigate }) {
+export default function Navbar() {
   const { theme, toggleTheme } = useTheme();
   return (
     <nav style={{
@@ -14,10 +14,10 @@ export default function Navbar({ onNavigate }) {
       justifyContent: 'space-between'
     }}>
       <div style={{ display: 'flex', gap: '2rem' }}>
-        <button onClick={() => onNavigate('home')} style={{ background: 'none', border: 'none', fontWeight: 'bold', cursor: 'pointer', color: theme === 'dark' ? '#f5f5f5' : '#333' }}>Home</button>
-        <button onClick={() => onNavigate('products')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: theme === 'dark' ? '#f5f5f5' : '#333' }}>Products</button>
-        <button onClick={() => onNavigate('cart')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: theme === 'dark' ? '#f5f5f5' : '#333' }}>Cart</button>
-        <button onClick={() => onNavigate('account')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: theme === 'dark' ? '#f5f5f5' : '#333' }}>Account</button>
+        <Link to="/" style={{ textDecoration: 'none', fontWeight: 'bold', color: theme === 'dark' ? '#f5f5f5' : '#333' }}>Home</Link>
+        <Link to="/products" style={{ textDecoration: 'none', color: theme === 'dark' ? '#f5f5f5' : '#333' }}>Products</Link>
+        <Link to="/cart" style={{ textDecoration: 'none', color: theme === 'dark' ? '#f5f5f5' : '#333' }}>Cart</Link>
+        <Link to="/account" style={{ textDecoration: 'none', color: theme === 'dark' ? '#f5f5f5' : '#333' }}>Account</Link>
       </div>
       <button
         onClick={toggleTheme}

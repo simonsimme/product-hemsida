@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useTheme } from './ThemeContext';
+import { Link } from 'react-router-dom';
 
 const Products = () => {
     const [products, setProducts] = useState([]);
@@ -8,7 +9,7 @@ const Products = () => {
     const { theme } = useTheme();
 
     useEffect(() => {
-        fetch('http://localhost:8081/products')
+        fetch('http://localhost:8082/products')
             .then((res) => {
                 if (!res.ok) throw new Error(`Failed to fetch products: ${res.status} ${res.statusText}`);
                 const contentType = res.headers.get('content-type');
@@ -46,21 +47,23 @@ const Products = () => {
                 gap: '20px' 
             }}>
                 {products.map((product) => (
-                    <div key={product.id} style={{ 
-                        border: '1px solid #ccc', 
-                        padding: '16px', 
-                        backgroundColor: backgroundColor, 
-                        borderRadius: '8px' 
-                    }}>
-                        <h3>{product.title}</h3>
-                        <p>{product.description}</p>
-                        {product.imageUrl && (
-                            <img src={`http://localhost:8081${product.imageUrl}`} alt={product.title} style={{ width: '50%', height: 'auto', borderRadius: '4px' }} />
-                        )}
-                        
-                        <p><strong>Price:</strong> ${product.price}</p>
-                        <p><strong>Stock:</strong> {product.quantity}</p>
-                    </div>
+                    <Link to={`/product/${product.id}`} key={product.id} style={{ textDecoration: 'none', color: textColor }}>
+                        <div style={{ 
+                            border: '1px solid #ccc', 
+                            padding: '16px', 
+                            backgroundColor: backgroundColor, 
+                            borderRadius: '8px' 
+                        }}>
+                            <h3>{product.title}</h3>
+                            <p>{product.description}</p>
+                            {product.imageUrl && (
+                                <img src={`http://localhost:8082${product.imageUrl}`} alt={product.title} style={{ width: '50%', height: 'auto', borderRadius: '4px' }} />
+                            )}
+                            
+                            <p><strong>Price:</strong> ${product.price}</p>
+                            <p><strong>Stock:</strong> {product.quantity}</p>
+                        </div>
+                    </Link>
                 ))}
             </div>
         </div>

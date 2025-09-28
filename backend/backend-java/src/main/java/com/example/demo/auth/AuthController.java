@@ -51,7 +51,14 @@ public class AuthController {
     if (!encoder.matches(req.password(), u.getPasswordHash())) {
       throw new IllegalArgumentException("Invalid credentials");
     }
-    return new AuthResponse(jwt.generate(u.getId().toString(), Set.of(u.getRole())), u.getId());
+
+    // Generate token
+    String token = jwt.generate(u.getId().toString(), Set.of(u.getRole()));
+
+    // Log token for debugging
+    System.out.println("Generated Token: " + token);
+
+    return new AuthResponse(token, u.getId());
   }
 
   

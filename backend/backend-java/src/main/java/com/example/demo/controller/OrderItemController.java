@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.demo.auth.dto.OrderItemRequest;
+import com.example.demo.auth.dto.OrderRequest;
 import com.example.demo.entities.Order;
 import com.example.demo.service.OrderService;
 
@@ -15,17 +16,20 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/order-items")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "http://localhost:3000")
 public class OrderItemController {
 
     private final OrderService orderService;
 
     // Create a new order for a user
     @PostMapping("/create/{userId}")
+    
     public ResponseEntity<Order> createOrder(
             @PathVariable UUID userId,
             @RequestBody List<OrderItemRequest> items
     ) {
-        Order order = orderService.createOrder(userId, items);
+        OrderRequest orderRequest = new OrderRequest(userId, items);
+        Order order = orderService.createOrder(orderRequest);
         return ResponseEntity.ok(order);
     }
 

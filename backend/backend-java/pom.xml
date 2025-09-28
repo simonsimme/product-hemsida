@@ -111,7 +111,7 @@
                 <artifactId>flyway-maven-plugin</artifactId>
                 <version>9.22.3</version>
                 <configuration>
-                    <url>jdbc:postgresql://localhost:5434/scheduler_db</url>
+                    <url>jdbc:postgresql://localhost:5434/product_db</url>
                     <user>postgres</user>
                     <password>password</password>
                 </configuration>

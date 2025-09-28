@@ -3,9 +3,11 @@ package com.example.demo.service;
 import java.util.List;
 import java.util.UUID;
 
+import org.hibernate.Hibernate;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.auth.dto.OrderItemRequest;
+import com.example.demo.auth.dto.OrderRequest;
 import com.example.demo.entities.Order;
 import com.example.demo.entities.OrderItem;
 import com.example.demo.entities.User;
@@ -27,35 +29,39 @@ public class OrderService {
     
 
     @Transactional
-    public Order createOrder(UUID userId, List<OrderItemRequest> items) {
-        if (items == null || items.isEmpty()) {
+    public Order createOrder(OrderRequest orderRequest) {
+        if (orderRequest.items() == null || orderRequest.items().isEmpty()) {
             throw new IllegalArgumentException("Order must contain at least one item");
         }
-        User user = userRepository.findById(userId)
-            .orElseThrow(() -> new RuntimeException("User not found"));
 
+        User user = userRepository.findById(orderRequest.userId())
+            .orElseThrow(() -> new RuntimeException("User not found"));
 
         Order order = new Order();
         order.setId(UUID.randomUUID());
         order.setUser(user);
-       for (OrderItemRequest req : items) {
-    Products product = productRepository.findById(req.productId())
-        .orElseThrow(() -> new RuntimeException("Product not found"));
 
-    OrderItem item = new OrderItem();
-    item.setId(UUID.randomUUID());
-    item.setOrder(order);
-    item.setProduct(product);
-    item.setQuantity(req.quantity());
-    item.setPrice(product.getPrice());
+        for (OrderItemRequest req : orderRequest.items()) {
+            Products product = productRepository.findById(req.productId())
+                .orElseThrow(() -> new RuntimeException("Product not found"));
 
-    order.getItems().add(item);
-}
+            OrderItem item = new OrderItem();
+            item.setId(UUID.randomUUID());
+            item.setOrder(order);
+            item.setProduct(product);
+            item.setQuantity(req.quantity());
+            item.setPrice(product.getPrice());
+
+            order.getItems().add(item);
+        }
+
         return orderRepository.save(order);
     }
 
     public List<Order> getOrdersForUser(UUID userId) {
-        return orderRepository.findByUserId(userId);
+        List<Order> orders = orderRepository.findByUserId(userId);
+        orders.forEach(order -> Hibernate.initialize(order.getUser())); // Explicitly initialize lazy-loaded User
+        return orders;
     }
 }
 

@@ -8,6 +8,7 @@ import jakarta.validation.constraints.NotNull;
 
 public record OrderItemRequest(
 @NotNull UUID productId,
-@Min(1) int quantity
+@Min(1) int quantity,
+@Min(0) int price
 ) {}
 

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.demo.auth.dto.CreateOrderRequest;
 import com.example.demo.entities.Order;
 import com.example.demo.service.OrderService;
+import com.example.demo.auth.dto.OrderRequest;
 
 import lombok.RequiredArgsConstructor;
 
@@ -24,8 +26,8 @@ public class OrderController {
     private final OrderService orderService;
 
     @PostMapping
-    public ResponseEntity<Order> createOrder(@RequestBody CreateOrderRequest request) {
-        Order order = orderService.createOrder(request.userId(), request.items());
+    public ResponseEntity<Order> createOrder(@RequestBody OrderRequest orderRequest) {
+        Order order = orderService.createOrder(orderRequest);
         return ResponseEntity.ok(order);
     }
 

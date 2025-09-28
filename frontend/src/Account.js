@@ -9,6 +9,7 @@ export default function Account() {
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
+  const [inputEmail, setInputEmail] = useState(email);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -16,15 +17,22 @@ export default function Account() {
     setMessage('');
     const endpoint = mode === 'login' ? '/api/auth/login' : '/api/auth/register';
     try {
-      const res = await fetch(`http://localhost:8081${endpoint}` , {
+      const res = await fetch(`http://localhost:8082${endpoint}` , {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
+        body: JSON.stringify({ email: inputEmail, password })
       });
       if (!res.ok) throw new Error('Failed to ' + mode);
       const data = await res.json();
       setMessage(mode === 'login' ? 'Login successful!' : 'Registration successful!');
-      if (mode === 'login') login(email);
+      if (mode === 'login') {
+        login(inputEmail); 
+        localStorage.setItem('authToken', data.accessToken);
+        localStorage.setItem('userId', data.userId);
+        console.log('Stored token:', data);
+
+        
+      }
     } catch (err) {
       setMessage('Error: ' + err.message);
     }
@@ -48,8 +56,8 @@ export default function Account() {
         <input
           type="email"
           placeholder="Email"
-          value={email}
-          onChange={e => login(e.target.value)}
+          value={inputEmail} 
+          onChange={e => setInputEmail(e.target.value)} 
           required
         />
         <input

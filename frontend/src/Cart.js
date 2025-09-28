@@ -9,7 +9,14 @@ export default function Cart() {
 
   useEffect(() => {
     if (loggedIn) {
-      fetch('http://localhost:8081/orders')
+      const token = localStorage.getItem('authToken');
+      const userId = localStorage.getItem('userId'); 
+      console.log('Fetching orders with token:', token);
+      fetch(`http://localhost:8082/orders/user/${userId}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      })
         .then((res) => {
           if (!res.ok) throw new Error('Failed to fetch orders');
           return res.json();
@@ -39,9 +46,12 @@ export default function Cart() {
             <li key={order.id} style={{ marginBottom: '1rem' }}>
               <h3>Order #{order.id}</h3>
               <ul>
-                {order.order_items.map((item) => (
+                {(order.items || []).map((item) => (
                   <li key={item.id}>
-                    {item.productName} - Quantity: {item.quantity}
+                    <img src={`http://localhost:8082${item.product.imageUrl}`} alt={item.productName} style={{ width: '50px', height: '50px', marginRight: '10px' }} />
+                    {console.log(`http://localhost:8082${item.product.imageUrl}`)}
+                    {console.log(order.items)}
+                    Product ID: {item.id} - Price: ${item.price} - Quantity: {item.quantity}
                   </li>
                 ))}
               </ul>
