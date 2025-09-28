@@ -6,6 +6,7 @@ export default function Cart() {
   const { theme } = useTheme();
   const { loggedIn } = useAuth();
   const [orders, setOrders] = useState([]);
+  const [previousOrders, setPreviousOrders] = useState([]);
 
   useEffect(() => {
     if (loggedIn) {
@@ -21,7 +22,10 @@ export default function Cart() {
           if (!res.ok) throw new Error('Failed to fetch orders');
           return res.json();
         })
-        .then((data) => setOrders(data.filter((order) => order.status === 'ACTIVE')))
+        .then((data) => {
+          setOrders(data.filter((order) => order.status === 'ACTIVE'));
+          setPreviousOrders(data.filter((order) => order.status === 'SENT'));
+        })
         .catch((err) => console.error('Error fetching orders:', err));
     }
   }, [loggedIn]);
@@ -99,6 +103,30 @@ export default function Cart() {
           Pay
         </button>
       )}
+      
+      {/* Previous Orders Section */}
+      <div style={{ marginTop: '3rem', paddingTop: '2rem', borderTop: `1px solid ${theme === 'dark' ? '#444' : '#ddd'}` }}>
+        <h2>Previous Orders</h2>
+        {previousOrders.length === 0 ? (
+          <p>No previous orders found.</p>
+        ) : (
+          <ul>
+            {previousOrders.map((order) => (
+              <li key={order.id} style={{ marginBottom: '1rem', opacity: '0.8' }}>
+                <h3>Order #{order.id} - <span style={{ color: 'green', fontWeight: 'normal' }}>Sent</span></h3>
+                <ul>
+                  {(order.items || []).map((item) => (
+                    <li key={item.id}>
+                      <img src={`http://localhost:8082${item.product.imageUrl}`} alt={item.productName} style={{ width: '50px', height: '50px', marginRight: '10px' }} />
+                      Product ID: {item.product.title} - Price: ${item.price} - Quantity: {item.quantity}
+                    </li>
+                  ))}
+                </ul>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
     </div>
   );
 }

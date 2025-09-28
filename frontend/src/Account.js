@@ -1,15 +1,28 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTheme } from './ThemeContext';
 import { useAuth } from './AuthContext';
 
 export default function Account() {
   const { theme } = useTheme();
-  const { loggedIn, email, login, logout } = useAuth();
+  const { loggedIn, email, login, logout, validateToken } = useAuth();
   const [mode, setMode] = useState('login');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
   const [inputEmail, setInputEmail] = useState(email);
+
+  // Check token validity when user is logged in (only periodic checks, not immediate)
+  useEffect(() => {
+    if (loggedIn && validateToken) {
+      // Set up periodic token validation (every 5 minutes)
+      // Don't validate immediately to avoid logging out right after login
+      const interval = setInterval(() => {
+        validateToken();
+      }, 5 * 60 * 1000); // 5 minutes
+
+      return () => clearInterval(interval);
+    }
+  }, [loggedIn, validateToken]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -30,8 +43,6 @@ export default function Account() {
         localStorage.setItem('authToken', data.accessToken);
         localStorage.setItem('userId', data.userId);
         console.log('Stored token:', data);
-
-        
       }
     } catch (err) {
       setMessage('Error: ' + err.message);
