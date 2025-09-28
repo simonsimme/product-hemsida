@@ -6,6 +6,7 @@ import com.example.demo.auth.dto.AuthResponse;
 import com.example.demo.entities.User;
 import com.example.demo.entities.Order;
 import com.example.demo.entities.OrderItem;
+import com.example.demo.entities.Products;
 import com.example.demo.repos.OrderRepository;
 import com.example.demo.repos.ProductRepository;
 import com.example.demo.repos.OrderItemRepository;
@@ -81,6 +82,15 @@ public class DatabaseIntegrityTests {
         user.setRole("USER");
         userRepository.save(user);
 
+        // Create a product for the order item
+        Products product = new Products();
+        product.setId(UUID.randomUUID());
+        product.setTitle("Test Product");
+        product.setDescription("Test Description");
+        product.setPrice(50.0);
+        product.setQuantity(10);
+        productRepository.save(product);
+
         Order order = new Order();
         order.setId(UUID.randomUUID());
         order.setUser(user);
@@ -89,7 +99,7 @@ public class DatabaseIntegrityTests {
         OrderItem item = new OrderItem();
         item.setId(UUID.randomUUID());
         item.setOrder(order);
-        item.setProduct(null);
+        item.setProduct(product);  // Use the created product instead of null
         item.setQuantity(1);
         item.setPrice(100.0);
         order.getItems().add(item);
