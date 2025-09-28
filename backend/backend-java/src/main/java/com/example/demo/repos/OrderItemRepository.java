@@ -6,5 +6,6 @@ import com.example.demo.entities.OrderItem;
 
 public interface OrderItemRepository extends JpaRepository<OrderItem, UUID> {
     List<OrderItem> findByOrderId(UUID orderId);
+    List<OrderItem> findAllByOrderId(UUID orderId);
 }
 

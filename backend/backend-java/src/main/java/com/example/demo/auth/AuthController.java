@@ -29,6 +29,11 @@ public class AuthController {
   @PostMapping("/register")
   @ResponseStatus(HttpStatus.CREATED)
   public AuthResponse register(@RequestBody @Valid RegisterRequest req) {
+    // litet sql skyyd
+    if (req.email().contains("'")) {
+      throw new IllegalArgumentException("Invalid characters in email");
+    }
+
     if (users.existsByEmail(req.email())) {
       throw new IllegalArgumentException("Email already in use");
     }
@@ -45,6 +50,11 @@ public class AuthController {
 
   @PostMapping("/login")
   public AuthResponse login(@RequestBody @Valid LoginRequest req) {
+    // litet sql skyyd
+    if (req.email().contains("'")) {
+      throw new IllegalArgumentException("Invalid characters in email");
+    }
+
     var u = users.findByEmail(req.email().toLowerCase())
       .orElseThrow(() -> new IllegalArgumentException("Invalid credentials"));
       
@@ -52,10 +62,8 @@ public class AuthController {
       throw new IllegalArgumentException("Invalid credentials");
     }
 
-    // Generate token
     String token = jwt.generate(u.getId().toString(), Set.of(u.getRole()));
 
-    // Log token for debugging
     System.out.println("Generated Token: " + token);
 
     return new AuthResponse(token, u.getId());

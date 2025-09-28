@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS products (
 -- Orders: håller flera order items knyttet till en användare
 CREATE TABLE IF NOT EXISTS orders (
     id UUID PRIMARY KEY,
-    user_id UUID REFERENCES users(id),
+    user_id UUID NOT NULL REFERENCES users(id),
     status TEXT NOT NULL DEFAULT 'ACTIVE' CHECK (status IN ('ACTIVE', 'SENT', 'CANCELLED')),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
