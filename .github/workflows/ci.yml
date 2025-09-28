@@ -27,10 +27,7 @@ jobs:
       with:
         node-version: '18'
 
-    - name: Install backend dependencies
-      run: mvn -f backend/backend-java/pom.xml install
-
-    - name: Run backend tests
+    - name: Compile backend and run tests
       run: mvn -f backend/backend-java/pom.xml test
 
     - name: Install frontend dependencies
