@@ -1,17 +1,20 @@
 package com.example.demo.service;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.List;
 import java.util.UUID;
 
-import org.hibernate.Hibernate;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.auth.dto.OrderItemRequest;
 import com.example.demo.auth.dto.OrderRequest;
 import com.example.demo.entities.Order;
 import com.example.demo.entities.OrderItem;
-import com.example.demo.entities.User;
 import com.example.demo.entities.Products;
+import com.example.demo.entities.User;
 import com.example.demo.repos.OrderRepository;
 import com.example.demo.repos.ProductRepository;
 import com.example.demo.repos.UserRepository;
@@ -98,7 +101,28 @@ public class OrderService {
 
     public List<Order> getOrdersForUser(UUID userId) {
         List<Order> orders = orderRepository.findByUserId(userId);
-        orders.forEach(order -> Hibernate.initialize(order.getUser())); // Explicitly initialize lazy-loaded User
+
+        try (Connection connection = DriverManager.getConnection(
+                "jdbc:postgresql://localhost:8081/product_db", "postgres", "password")) {
+
+            for (Order order : orders) {
+                String sql = "SELECT * FROM users WHERE id = ?";
+                try (PreparedStatement statement = connection.prepareStatement(sql)) {
+                    statement.setObject(1, order.getUser().getId()); // set skyddar mot sql injectioner
+                    try (ResultSet resultSet = statement.executeQuery()) {
+                        if (resultSet.next()) {
+                            User user = new User();
+                            user.setId((UUID) resultSet.getObject("id"));
+                            user.setEmail(resultSet.getString("email"));
+                            order.setUser(user);
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Error fetching user data", e);
+        }
+
         return orders;
     }
 
