@@ -12,7 +12,7 @@ export default function Cart() {
     if (loggedIn) {
       const token = localStorage.getItem('authToken');
       const userId = localStorage.getItem('userId'); 
-      console.log('Fetching orders with token:', token);
+      //console.log('Fetching orders with token:', token);
       fetch(`http://localhost:8082/orders/user/${userId}`, {
         headers: {
           'Authorization': `Bearer ${token}`

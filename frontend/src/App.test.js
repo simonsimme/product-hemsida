@@ -8,6 +8,5 @@ jest.mock('./ThemeContext');
 
 test('renders app without crashing', () => {
   render(<App />);
-  // Test passes if component renders without throwing
   expect(true).toBe(true);
 });

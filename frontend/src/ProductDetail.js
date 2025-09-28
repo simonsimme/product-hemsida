@@ -59,7 +59,7 @@ const ProductDetail = () => {
 
     if (loading) return <div>Loading product...</div>;
     if (error) return <div>Error: {error}</div>;
-    const backgroundColor = theme === 'dark' ? '#12121273' : '#ffffff';
+    const backgroundColor = theme === 'dark' ? '#12121219' : '#ffffff';
     const textColor = theme === 'dark' ? '#ffffff' : '#181818';
 
     return (

@@ -71,10 +71,10 @@ public class AuthController {
 
   
 
-  @GetMapping("/profile")
-public String getProfile() {
-    // testa
-    return "This is a protected endpoint! You are authenticated.";
-}
+  @GetMapping("/validate")
+  public String validateToken() {
+    return "Token is valid";
+  }
+
 
 }

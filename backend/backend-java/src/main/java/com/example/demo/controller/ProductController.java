@@ -35,10 +35,7 @@ public class ProductController {
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
-    @GetMapping("/search")
-public ResponseEntity<List<Products>> search(@RequestParam String title) {
-    return ResponseEntity.ok(productService.searchProducts(title));
-}
+   
 
    
 

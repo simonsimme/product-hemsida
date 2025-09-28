@@ -57,8 +57,6 @@ export const AuthProvider = ({ children }) => {
       if (savedEmail && token) {
         setEmail(savedEmail);
         setLoggedIn(true);
-        // Only validate token on startup if you want strict validation
-        // For now, trust the stored token until periodic validation runs
       }
     };
     

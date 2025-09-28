@@ -11,11 +11,10 @@ export default function Account() {
   const [loading, setLoading] = useState(false);
   const [inputEmail, setInputEmail] = useState(email);
 
-  // Check token validity when user is logged in (only periodic checks, not immediate)
   useEffect(() => {
     if (loggedIn && validateToken) {
-      // Set up periodic token validation (every 5 minutes)
-      // Don't validate immediately to avoid logging out right after login
+      //  token validation (every 5 minutes)
+
       const interval = setInterval(() => {
         validateToken();
       }, 5 * 60 * 1000); // 5 minutes

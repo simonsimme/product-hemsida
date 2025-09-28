@@ -52,13 +52,18 @@ const Products = () => {
                             border: '1px solid #ccc', 
                             padding: '16px', 
                             backgroundColor: backgroundColor, 
-                            borderRadius: '8px' 
+                            borderRadius: '8px',
+                            height: '600px',
+                            display: 'flex',
+                            flexDirection: 'column' 
                         }}>
                             <h3>{product.title}</h3>
                             <p>{product.description}</p>
-                            {product.imageUrl && (
-                                <img src={`http://localhost:8082${product.imageUrl}`} alt={product.title} style={{ width: '50%', height: 'auto', borderRadius: '4px' }} />
-                            )}
+                            <div style={{ flex: '1', display: 'flex', justifyContent: 'center', alignItems: 'center', marginBottom: '10px' }}>
+                                {product.imageUrl && (
+                                    <img src={`http://localhost:8082${product.imageUrl}`} alt={product.title} style={{ maxWidth: '100%', maxHeight: '150px', objectFit: 'contain', borderRadius: '4px' }} />
+                                )}
+                            </div>
                             
                             <p><strong>Price:</strong> ${product.price}</p>
                             <p><strong>Stock:</strong> {product.quantity}</p>
