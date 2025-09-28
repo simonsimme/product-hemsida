@@ -3,6 +3,7 @@ package com.example.demo;
 import com.example.demo.auth.AuthController;
 import com.example.demo.auth.dto.RegisterRequest;
 import com.example.demo.auth.dto.AuthResponse;
+import com.example.demo.config.TestDatabaseConfig;
 import com.example.demo.entities.User;
 import com.example.demo.entities.Order;
 import com.example.demo.entities.OrderItem;
@@ -16,6 +17,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
+import org.springframework.test.context.ActiveProfiles;
 
 
 import java.util.UUID;
@@ -23,6 +26,8 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
+@ActiveProfiles("test")
+@Import(TestDatabaseConfig.class)
 public class DatabaseIntegrityTests {
 
     @Autowired
