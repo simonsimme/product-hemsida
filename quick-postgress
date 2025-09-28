@@ -1,0 +1,3 @@
+psql -h localhost -p 5434 -U postgres -d product_db
+
+psql -h localhost -p 8082 -U postgres -d product_db

@@ -1,0 +1,7 @@
+SELECT id, email, role, created_at FROM users;
+
+
+
+UPDATE users
+SET role = 'ADMIN'
+WHERE email = 'admin@example.com';
