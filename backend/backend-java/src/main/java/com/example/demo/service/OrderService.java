@@ -26,8 +26,6 @@ public class OrderService {
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
 
-    
-
     @Transactional
     public Order createOrder(OrderRequest orderRequest) {
         if (orderRequest.items() == null || orderRequest.items().isEmpty()) {
@@ -58,10 +56,62 @@ public class OrderService {
         return orderRepository.save(order);
     }
 
+    @Transactional
+    public Order createOrUpdateOrder(OrderRequest orderRequest) {
+        if (orderRequest.items() == null || orderRequest.items().isEmpty()) {
+            throw new IllegalArgumentException("Order must contain at least one item");
+        }
+
+        User user = userRepository.findById(orderRequest.userId())
+            .orElseThrow(() -> new RuntimeException("User not found"));
+
+        // Check for an existing active order
+        List<Order> existingOrders = orderRepository.findByUserId(user.getId());
+        Order activeOrder = existingOrders.stream()
+            .filter(order -> order.getStatus().equals("ACTIVE"))
+            .findFirst()
+            .orElse(null);
+
+        if (activeOrder == null) {
+            // Create a new order if no active order exists
+            activeOrder = new Order();
+            activeOrder.setId(UUID.randomUUID());
+            activeOrder.setUser(user);
+        }
+
+        for (OrderItemRequest req : orderRequest.items()) {
+            Products product = productRepository.findById(req.productId())
+                .orElseThrow(() -> new RuntimeException("Product not found"));
+
+            OrderItem item = new OrderItem();
+            item.setId(UUID.randomUUID());
+            item.setOrder(activeOrder);
+            item.setProduct(product);
+            item.setQuantity(req.quantity());
+            item.setPrice(product.getPrice());
+
+            activeOrder.getItems().add(item);
+        }
+
+        return orderRepository.save(activeOrder);
+    }
+
     public List<Order> getOrdersForUser(UUID userId) {
         List<Order> orders = orderRepository.findByUserId(userId);
         orders.forEach(order -> Hibernate.initialize(order.getUser())); // Explicitly initialize lazy-loaded User
         return orders;
+    }
+
+    public Order getActiveOrder(UUID userId) {
+        return orderRepository.findByUserId(userId).stream()
+            .filter(order -> "ACTIVE".equals(order.getStatus()))
+            .findFirst()
+            .orElseThrow(() -> new RuntimeException("No active order found for user"));
+    }
+
+    @Transactional
+    public Order updateOrder(Order order) {
+        return orderRepository.save(order);
     }
 }
 

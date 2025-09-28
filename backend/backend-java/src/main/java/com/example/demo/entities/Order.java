@@ -24,6 +24,7 @@ import lombok.*;
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
 public class Order {
     @Id
+    @Builder.Default
     private UUID id = UUID.randomUUID();
 
    
@@ -33,9 +34,13 @@ public class Order {
     private User user;
     
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @Builder.Default
     private List<OrderItem> items = new ArrayList<>();
 
     @Column(name = "created_at") 
     private OffsetDateTime createdAt;
 
+    @Column(name = "status", nullable = false)
+    @Builder.Default
+    private String status = "ACTIVE";
 }

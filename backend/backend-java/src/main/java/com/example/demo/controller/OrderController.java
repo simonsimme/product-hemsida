@@ -27,8 +27,16 @@ public class OrderController {
 
     @PostMapping
     public ResponseEntity<Order> createOrder(@RequestBody OrderRequest orderRequest) {
-        Order order = orderService.createOrder(orderRequest);
-        return ResponseEntity.ok(order);
+        // Fetch the active order for the user
+        Order activeOrder = orderService.getActiveOrder(orderRequest.userId());
+
+        // Update the status to SENT
+        activeOrder.setStatus("SENT");
+
+        // Save the updated order
+        Order updatedOrder = orderService.updateOrder(activeOrder);
+
+        return ResponseEntity.ok(updatedOrder);
     }
 
     @GetMapping("/user/{userId}")

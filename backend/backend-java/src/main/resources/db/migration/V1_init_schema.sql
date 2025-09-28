@@ -23,6 +23,7 @@ CREATE TABLE IF NOT EXISTS products (
 CREATE TABLE IF NOT EXISTS orders (
     id UUID PRIMARY KEY,
     user_id UUID REFERENCES users(id),
+    status TEXT NOT NULL DEFAULT 'ACTIVE' CHECK (status IN ('ACTIVE', 'SENT', 'CANCELLED')),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 -- Order items

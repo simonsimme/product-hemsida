@@ -33,18 +33,16 @@ const ProductDetail = () => {
     const handleAddToCart = () => {
         const token = localStorage.getItem('authToken'); 
         console.log('Token:', token);
-        fetch(`http://localhost:8082/order-items/create/${userId}`, {
+        fetch(`http://localhost:8082/order-items/create-or-update/${userId}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`,
             },
-            body: JSON.stringify([
-                {
-                    productId: product.id,
-                    quantity: 1, 
-                },
-            ]),
+            body: JSON.stringify({
+                productId: product.id,
+                quantity: 1, 
+            }),
         })
             .then((res) => {
                 if (!res.ok) throw new Error('Failed to add item to cart');
