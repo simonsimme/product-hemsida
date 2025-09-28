@@ -65,9 +65,19 @@ jobs:
         SPRING_DATASOURCE_PASSWORD: postgres
         SPRING_JPA_HIBERNATE_DDL_AUTO: create-drop
 
+    - name: Cache node modules
+      uses: actions/cache@v3
+      with:
+        path: frontend/node_modules
+        key: ${{ runner.os }}-node-${{ hashFiles('frontend/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-node-
+
     - name: Install frontend dependencies
       working-directory: frontend
-      run: npm install
+      run: |
+        npm ci --legacy-peer-deps
+        npm ls react-router-dom
 
     - name: Run frontend tests
       working-directory: frontend
