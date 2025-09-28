@@ -20,7 +20,7 @@ jobs:
           POSTGRES_PASSWORD: postgres
           POSTGRES_DB: product_db
         ports:
-          - 8081:5432
+          - 5432:5432
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -42,8 +42,28 @@ jobs:
       with:
         node-version: '18'
 
-    - name: Compile backend and run tests
-      run: mvn -f backend/backend-java/pom.xml test
+    - name: Wait for PostgreSQL
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y postgresql-client
+        until pg_isready -h localhost -p 5432 -U postgres; do
+          echo "Waiting for PostgreSQL..."
+          sleep 2
+        done
+        echo "PostgreSQL is ready!"
+
+    - name: Compile backend
+      run: mvn -f backend/backend-java/pom.xml compile
+
+    - name: Run backend tests
+      run: mvn -f backend/backend-java/pom.xml test -Dspring.profiles.active=test
+      env:
+        DB_USER: postgres
+        DB_PASS: postgres
+        SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/product_db
+        SPRING_DATASOURCE_USERNAME: postgres
+        SPRING_DATASOURCE_PASSWORD: postgres
+        SPRING_JPA_HIBERNATE_DDL_AUTO: create-drop
 
     - name: Install frontend dependencies
       working-directory: frontend
