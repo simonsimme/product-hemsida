@@ -28,15 +28,15 @@ jobs:
         node-version: '18'
 
     - name: Install backend dependencies
-      run: mvn -f product-hemsida/backend/backend-java/pom.xml install
+      run: mvn -f backend/backend-java/pom.xml install
 
     - name: Run backend tests
-      run: mvn -f product-hemsida/backend/backend-java/pom.xml test
+      run: mvn -f backend/backend-java/pom.xml test
 
     - name: Install frontend dependencies
-      working-directory: product-hemsida/frontend
+      working-directory: frontend
       run: npm install
 
     - name: Run frontend tests
-      working-directory: product-hemsida/frontend
+      working-directory: frontend
       run: npm test -- --watchAll=false
