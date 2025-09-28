@@ -1,0 +1,42 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Java
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+
+    - name: Install backend dependencies
+      run: mvn -f product-hemsida/backend/backend-java/pom.xml install
+
+    - name: Run backend tests
+      run: mvn -f product-hemsida/backend/backend-java/pom.xml test
+
+    - name: Install frontend dependencies
+      working-directory: product-hemsida/frontend
+      run: npm install
+
+    - name: Run frontend tests
+      working-directory: product-hemsida/frontend
+      run: npm test -- --watchAll=false
