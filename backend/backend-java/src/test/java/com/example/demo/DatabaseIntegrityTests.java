@@ -74,7 +74,7 @@ public class DatabaseIntegrityTests {
             Order invalidOrder = new Order();
             invalidOrder.setId(UUID.randomUUID());
             invalidOrder.setUser(null); 
-            orderRepository.save(invalidOrder);
+            orderRepository.save(invalidOrder); // ger error på null user
         });
     }
 
@@ -88,7 +88,7 @@ public class DatabaseIntegrityTests {
         user.setCreatedAt(java.time.OffsetDateTime.now());
         userRepository.save(user);
 
-        // Create a product for the order item
+        
         Products product = new Products();
         product.setId(UUID.randomUUID());
         product.setTitle("Test Product");
@@ -107,26 +107,17 @@ public class DatabaseIntegrityTests {
         OrderItem item = new OrderItem();
         item.setId(UUID.randomUUID());
         item.setOrder(order);
-        item.setProduct(product);  // Use the created product instead of null
+        item.setProduct(product);  
         item.setQuantity(1);
         item.setPrice(100.0);
         order.getItems().add(item);
         orderRepository.save(order);
 
-        orderRepository.delete(order);
+        orderRepository.delete(order); // delete order also removes item
 
         
         assertTrue(orderItemRepository.findAllByOrderId(order.getId()).isEmpty());
     }
 
-    @Test
-    void testSQLInjection() {
-        String sqlInjectionPayload = "' OR '1'='1";
-        RegisterRequest maliciousRequest = new RegisterRequest(sqlInjectionPayload, "password");
-
-        assertThrows(IllegalArgumentException.class, () -> authController.register(maliciousRequest));
-
-        assertTrue(userRepository.findAll().stream()
-                .noneMatch(user -> user.getEmail().equals(sqlInjectionPayload)));
-    }
+    
 }

@@ -29,10 +29,7 @@ public class AuthController {
   @PostMapping("/register")
   @ResponseStatus(HttpStatus.CREATED)
   public AuthResponse register(@RequestBody @Valid RegisterRequest req) {
-    // litet sql skyyd
-    if (req.email().contains("'")) {
-      throw new IllegalArgumentException("Invalid characters in email");
-    }
+  
 
     if (users.existsByEmail(req.email())) {
       throw new IllegalArgumentException("Email already in use");
@@ -50,10 +47,7 @@ public class AuthController {
 
   @PostMapping("/login")
   public AuthResponse login(@RequestBody @Valid LoginRequest req) {
-    // litet sql skyyd
-    if (req.email().contains("'")) {
-      throw new IllegalArgumentException("Invalid characters in email");
-    }
+  
 
     var u = users.findByEmail(req.email().toLowerCase())
       .orElseThrow(() -> new IllegalArgumentException("Invalid credentials"));
