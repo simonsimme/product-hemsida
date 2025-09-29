@@ -1,5 +1,5 @@
--- Primeagen-themed products for the database
--- Run this with: psql -h localhost -p 8081 -U postgres -d product_db -f add-sample-products.sql
+
+--psql -h localhost -p 8081 -U postgres -d product_db -f add-sample-products.sql
 
 INSERT INTO products (id, title, description, price, quantity, image_url, created_at) VALUES
 (gen_random_uuid(), 'The Vim Boat', 'Escape from JavaScript island with this legendary vessel. Warning: May cause uncontrollable urges to use hjkl for navigation. No LSP required.', 420.69, 1, '/images/boat.png', CURRENT_TIMESTAMP),
